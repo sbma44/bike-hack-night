@@ -1,0 +1,17 @@
+{
+  "name": "bike-hack-night",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "./scripts/build.sh",
+    "server": "node scripts/server.js",
+    "talk": "./scripts/present.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "turf-distance": "^3.0.12",
+    "ws": "^1.1.1"
+  }
+}

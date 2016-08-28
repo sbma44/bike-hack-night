@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            body { font-family: 'Helvetica'; background-color: black; }
+            .floater {
+                position: fixed;
+                background-color: rgba(0, 0, 0, 0.6);
+                top: 0;
+                padding: 0.5em;
+                color: white;
+            }
+            #controls {
+                color: white;
+                left: 0;
+            }
+            #controls span {
+                margin-right: 1em;
+            }
+            #legend {
+                position: fixed;
+                right: 0;
+            }
+            #legend div {
+                float: left;
+                margin-right: 1em;
+            }
+            #legend div div {
+                float: left;
+                margin-right: 0.5em;
+                width: 1em;
+            }
+            #legend #front div {
+                background-color: white;
+            }
+            #legend #rear div {
+                background-color: #0066ff;
+            }
+            #container { margin-top: 1.5em; }
+        </style>
+    </head>
+    <body>
+        <div id="legend" class="floater">
+            <div id="front"><div>&nbsp;</div>front</div>
+            <div id="rear"><div>&nbsp;</div>rear</div>
+        </div>
+        <div id="controls" class="floater">
+            <span><input type="checkbox" id="zero" checked>&nbsp;zero &rarr; max</span>
+            <span><input type="checkbox" id="boxcar" checked>&nbsp;boxcar smooth <select id="boxcarWidth"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option><option value="9">9</option><option value="11">11</option><option value="13">13</option></select></span>
+            <!--
+            <span><input type="checkbox" id="mode">&nbsp;mode trim</span>
+            <span><input type="checkbox" id="blip">&nbsp;blip trim</span>
+            <span><input type="checkbox" id="noise">&nbsp;noise interpolation</span>
+            -->
+        </div>
+
+        <div id="container"></div>
+        <script type="text/javascript" src="/dist/analyze-dist.js"></script>
+    </body>
+</html>

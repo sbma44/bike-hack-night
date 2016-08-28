@@ -1,0 +1,193 @@
+<!DOCTYPE html><html><head><title></title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /><style type='text/css'>
+@font-face {
+  font-family: 'fontawesome';
+  src: url('/static/FontAwesome.otf');
+}
+
+body {
+  font-family: 'fontawesome', 'Helvetica';
+  letter-spacing: -5px;
+  background: #000;
+  background-size: 100%;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+h1, h2, h3, p {
+  margin:0;
+}
+
+iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; overflow: hidden;}
+
+em, a {
+  font-style:normal;
+  color:#0066ff;
+}
+
+a {
+  background:#34d0e7;
+  color:#000;
+  text-decoration:none;
+}
+
+img {
+  width:100%;
+}
+
+body > div {
+  cursor:pointer;
+  cursor:hand;
+  position:absolute;
+  top:0px;
+  left:0px;
+  padding:75px;
+  line-height:97%;
+}
+
+div.center {
+  text-align:center;
+}
+
+div.imageText {
+  text-shadow:0px 0px 5px rgba(0,0,0,0.2);
+}
+
+body iframe { display: none; }
+
+body.iframe1 iframe#iframe1 { display: block; }
+body.iframe2 iframe#iframe2 { display: block; }
+body.iframe3 iframe#iframe3 { display: block; }
+body.iframe4 iframe#iframe4 { display: block; }
+body.iframe5 iframe#iframe5 { display: block; }
+
+notes {
+    display:none;
+}
+/* normally not good, but ok in context of full screen directional navigation */
+:focus {
+    outline: 0;
+}
+
+.fullscreen-bg { display: none; width: 100%;}
+body.video .fullscreen-bg { display: block; }
+body.video-blur .fullscreen-bg { display: block; -webkit-filter: blur(20px); opacity: 0.5; }
+body.pullup150 { background-position-y: -150px;}
+
+</style><script type='text/javascript'>
+window.onload = function() {
+  var s = document.querySelectorAll('body > div'), ti, i;
+  var notes = [];
+  for (i = 0; i < s.length; i++) {
+    s[i].setAttribute('tabindex', 0);
+    var noteElements = s[i].getElementsByTagName('notes');
+    notes.push([]);
+    while (noteElements.length) {
+      var note = noteElements[0];
+      notes[i].push(note.innerHTML.trim());
+      note.parentNode.removeChild(note);
+    }
+  }
+  if (!s.length) return;
+  var big = window.big = { current: 0, forward: fwd, reverse: rev, go: go, length: s.length };
+  function resize() {
+    var w = window.innerWidth, h = window.innerHeight, e = s[big.current];
+    e.style.fontSize = h + 'px';
+    function pass(cinch, start) {
+      for (var i = start; i > 0 && (e.offsetWidth > w || e.offsetHeight > h); i -= cinch) {
+        e.style.fontSize = i + 'px';
+      }
+      return i + cinch;
+    }
+    pass(2, pass(5, pass(10, h - 2)));
+    e.style.marginTop = (h - e.offsetHeight) / 2 + 'px';
+  }
+  function go(n) {
+    big.current = n;
+    for (i = 0; typeof console === 'object' && i < notes[n].length; i++) console.log('%c%s: %s', 'padding:5px;font-family:serif;font-size:18px;line-height:150%;', n, notes[n][i]);
+    var e = s[n], t = parseInt(e.getAttribute('data-time-to-next') || 0, 10);
+    document.body.className = e.getAttribute('data-bodyclass') || '';
+    for (i = 0; i < s.length; i++) s[i].style.display = 'none';
+    e.style.display = 'inline';
+    e.focus();
+    if (e.firstChild && e.firstChild.nodeName === 'IMG') {
+      document.body.style.backgroundImage = 'url("' + e.firstChild.src + '")';
+      e.firstChild.style.display = 'none';
+      if ('classList' in e) e.classList.add('imageText');
+    } else {
+      document.body.style.backgroundImage = '';
+      document.body.style.backgroundColor = e.style.backgroundColor;
+    }
+    if (ti !== undefined) window.clearInterval(ti);
+    if (t > 0) ti = window.setTimeout(fwd, t * 1000);
+    resize();
+    if (window.location.hash !== n) window.location.hash = n;
+    document.title = e.textContent || e.innerText;
+  }
+  document.onclick = function(e) { if (e.target.tagName !== 'A') go(++big.current % s.length); };
+  function fwd() { go(Math.min(s.length - 1, ++big.current)); }
+  function rev() { go(Math.max(0, --big.current)); }
+  document.onkeydown = function(e) {
+    if (e.which === 39 || e.which === 34 || e.which === 40) fwd();
+    if (e.which === 37 || e.which === 33 || e.which === 38) rev();
+  };
+  document.ontouchstart = function(e) {
+    var x0 = e.changedTouches[0].pageX;
+    document.ontouchend = function(e2) {
+      var x1 = e2.changedTouches[0].pageX;
+      if (x1 - x0 < 0) fwd();
+      if (x1 - x0 > 0) rev();
+    };
+  };
+  function parse_hash() {
+    return Math.max(Math.min(s.length - 1,
+      parseInt(window.location.hash.substring(1), 10)), 0);
+  }
+  if (window.location.hash) big.current = parse_hash() || big.current;
+  window.onhashchange = function() {
+    i = parse_hash();
+    if (i !== big.current) go(i);
+  };
+  window.onresize = resize;
+
+  document.getElementById('iframe1').src = '/html/realtime.html?' + window.innerWidth + '|' + window.innerHeight;
+
+  document.getElementById('iframe2').src = '/html/analyze.html';
+
+  go(big.current);
+};
+</script></head><body>
+
+<video loop muted autoplay class="fullscreen-bg">
+    <source src="/static/out.mp4" type="video/mp4">
+</video>
+
+<iframe id="iframe1" scrolling="no"></iframe>
+
+<iframe id="iframe2"></iframe>
+
+<div data-bodyclass="video">bike <em>sensors</em></div>
+<div data-bodyclass="video-blur">tom lee<br/> tjl<br/> sbma44</div>
+<div data-bodyclass="pullup150"><img src="img/esp8266_and_sensor.jpg"></div>
+<div data-bodyclass="iframe1"></div>
+<div><img src="img/iphoneApp.jpg"></div>
+<div data-bodyclass="iframe2"></div>
+<!--
+  previous work
+  requirements:
+    - sensing distance
+    - sensing location
+    - storage
+    - analysis
+  ultrasonic sensors
+    - live demo
+
+  ESP8266 / Arduino
+
+  iPhone GPS
+  iPhone app & components
+  Websockets
+  Firebase
+  -->
+
