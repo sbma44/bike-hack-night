@@ -2,7 +2,12 @@
 <html>
     <head>
         <style>
-            body { font-family: 'Helvetica'; background-color: black; }
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: 'Helvetica';
+                background-color: black;
+            }
             .floater {
                 position: fixed;
                 background-color: rgba(0, 0, 0, 0.6);
@@ -47,6 +52,9 @@
         <div id="controls" class="floater">
             <span><input type="checkbox" id="zero" checked>&nbsp;zero &rarr; max</span>
             <span><input type="checkbox" id="boxcar" checked>&nbsp;boxcar smooth <select id="boxcarWidth"><option value="3">3</option><option value="5">5</option><option value="7" selected>7</option><option value="9">9</option><option value="11">11</option><option value="13">13</option></select></span>
+            <span><input type="checkbox" id="speed" checked>&nbsp;speed</span>
+            <span><input type="checkbox" id="dy">&nbsp;dy</span>
+            <span><input type="checkbox" id="dy2">&nbsp;dy2</span>
             <!--
             <span><input type="checkbox" id="mode">&nbsp;mode trim</span>
             <span><input type="checkbox" id="blip">&nbsp;blip trim</span>

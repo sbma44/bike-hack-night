@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "build": "./scripts/build.sh",
-    "server": "node scripts/server.js",
+    "start": "node scripts/server.js",
     "talk": "./scripts/present.sh"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "d3-queue": "^3.0.3",
     "turf-distance": "^3.0.12",
+    "turf-point": "^2.0.1",
     "ws": "^1.1.1"
   }
 }
