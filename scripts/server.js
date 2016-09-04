@@ -6,6 +6,7 @@ var WebSocketServer = require('ws').Server;
 // websocket broadcast server
 var wss = new WebSocketServer({ port: 8000 });
 wss.on('connection', function connection(ws) {
+  console.log('- websocket connection detected (' + wss.clients.length + ' total)');
   ws.on('error', function(e) { console.log('Got an error:', e); });
   ws.on('message', function incoming(message) {
     ws.esp8266 = true;
@@ -16,7 +17,7 @@ wss.on('connection', function connection(ws) {
     });
   });
 });
-console.log('websocket server started at 127.0.0.1:8000');
+console.log('* websocket server started at 127.0.0.1:8000');
 
 // http static server
 http.createServer(function (request, response) {
@@ -78,4 +79,4 @@ http.createServer(function (request, response) {
 
 }).listen(8080);
 
-console.log('static server running at 127.0.0.1:8080');
+console.log('* static server running at 127.0.0.1:8080');

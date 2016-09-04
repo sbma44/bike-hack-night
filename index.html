@@ -62,8 +62,19 @@ body.iframe3 iframe#iframe3 { display: block; }
 body.iframe4 iframe#iframe4 { display: block; }
 body.iframe5 iframe#iframe5 { display: block; }
 
+body.containbg {
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: contain;
+}
+
+body.white {
+  background-color: white;
+}
+
 notes {
-    display:none;
+    display: none;
 }
 /* normally not good, but ok in context of full screen directional navigation */
 :focus {
@@ -168,11 +179,17 @@ window.onload = function() {
 <iframe id="iframe2"></iframe>
 
 <div data-bodyclass="video">bike <em>sensors</em></div>
-<div data-bodyclass="video-blur">tom lee<br/> tjl<br/> sbma44</div>
-<div data-bodyclass="pullup150"><img src="img/esp8266_and_sensor.jpg"></div>
+
+<div data-bodyclass="containbg"><img src="/img/dr-ian-walker.jpg"></div>
+<div data-bodyclass="containbg white"><img src="/img/road-edge.png"></div>
+<div data-bodyclass="containbg white"><img src="/img/car-type.png"></div>
+<div data-bodyclass="containbg white"><img src="/img/helmet.png"></div>
+<div data-bodyclass="containbg"><img src="/img/dr-ian-walker-wig.jpg"></div>
+<div data-bodyclass="containbg"><img src="img/esp8266_and_sensor.jpg"></div>
 <div data-bodyclass="iframe1"></div>
 <div><img src="img/iphoneApp.jpg"></div>
 <div data-bodyclass="iframe2"></div>
+<div data-bodyclass="video-blur">tom lee<br/> tjl<br/> sbma44</div>
 <!--
   previous work
   requirements:
@@ -180,14 +197,18 @@ window.onload = function() {
     - sensing location
     - storage
     - analysis
+
   ultrasonic sensors
     - live demo
 
-  ESP8266 / Arduino
+  ESP8266 / Arduino (versus nodeMCU)
 
   iPhone GPS
   iPhone app & components
-  Websockets
-  Firebase
+    Websockets
+    Firebase
+    swift
+
+  signal processing
   -->
 

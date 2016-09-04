@@ -1,11 +1,11 @@
 var PIXELS_PER_SECOND = 30.0;
 var PIXELS_PER_CM = 2.5;
 var MAX_DIST = 300;
+var DX_HEIGHT = 300;
 var COLORS = [[255, 255, 255], [0, 102, 255]];
 
 var queue = require('d3-queue').queue;
-var dist = require('turf-distance');
-var pt = require('turf-point');
+var signal = require('../lib/signal');
 
 function addEvent(el, type, handler) {
     if (el.attachEvent) el.attachEvent('on'+type, handler); else el.addEventListener(type, handler);
@@ -27,54 +27,11 @@ function getAjax(url, success) {
     return xhr;
 }
 
-function calculateSpeed(geoData) {
-    var f = geoData.features[0];
-    var out = [];
-    var lastGoodPoint = 0;
-    for(var i = 1; i < f.properties.timestamp.length; i++) {
-        var t = (f.properties.timestamp[i] + f.properties.timestamp[lastGoodPoint]) / 2;
-        var timespan = f.properties.timestamp[i] - f.properties.timestamp[lastGoodPoint];
-        if (timespan < 0.5)
-            continue;
-        var distance = dist(pt(f.geometry.coordinates[i]), pt(f.geometry.coordinates[lastGoodPoint]), 'kilometers');
-        out.push([t - f.properties.timestamp[0], distance / timespan]);
-        lastGoodPoint = i;
-    }
-
-    // convert units from kilometers per sec to mph
-    out = out.map(function(d) {
-        d[1] = d[1] * 0.621371 * 3600;
-        return d;
-    });
-
-    // apply smoothing
-    out = boxcarSmooth(out, 5, 1);
-
-    return out;
-}
-
-function boxcarSmooth(data, width, offset) {
-    for(var i = Math.floor(width / 2); i < data.length - Math.floor(width / 2); i++) {
-        var sum = 0;
-        var total = 0;
-        for(var j = -1 * Math.floor(width / 2); j <= Math.floor(width / 2); j++) {
-            if (data[i + j][offset] !== null) {
-                sum += data[i + j][offset];
-                total++;
-            }
-        }
-
-        if (data[i][offset] !== null)
-            data[i][offset] = sum / total;
-    }
-    return data;
-}
-
 function setup(distanceData, geoData) {
     var data = JSON.parse(distanceData);
     var geo = JSON.parse(geoData);
 
-    var speed = calculateSpeed(geo);
+    var speed = signal.calculateSpeed(geo);
 
     MAX_DIST = data.reduce(function(prev, cur) { return Math.max(prev, Math.max(cur[1], cur[2])); }, 0);
 
@@ -112,67 +69,16 @@ function draw(data, speed) {
 
     // change zero => max
     if (isChecked('zero')) {
-        data = data.map(function(d) {
-            for(var i = 1; i <= 2; i++)
-                d[i] = (d[i] === 0) ? MAX_DIST : d[i];
-            return d;
-        });
-    }
-
-    // filter mode
-    if (isChecked('mode')) {
-        var counts = data.reduce(function(prev, cur) {
-            for(var i = 1; i <= 2; i++) {
-                if (cur[i] === null) continue;
-                if (!prev[cur[i]]) prev[cur[i]] = 0;
-                prev[cur[i]]++;
-            }
-            return prev;
-        }, {});
-        var mode = parseInt(Object.keys(counts).reduce(function(prev, cur) {
-            return (counts[cur] > counts[prev]) ? cur : prev;
-        }, Object.keys(counts)[0]));
-
-        data = data.map(function(d) {
-            for(var i = 1; i <= 2; i++)
-                d[i] = (d[i] === mode) ? null : d[i];
-            return d;
-        });
-    }
-
-    // remove blips
-    if (isChecked('blip')) {
-        for(var i = 0; i < data.length - 2; i++) {
-            for(var j = 1; j <= 2; j++) {
-                if ((data[i][j] === null) && (data[i+1][j]) && (data[i+2][j] === null))
-                    data[i+1][j] = null;
-            }
-        }
-    }
-
-    // interpolate noise away
-    if (isChecked('noise')) {
-        for(var i = 0; i < data.length - 2; i++) {
-            for(var j = 1; j <= 2; j++) {
-                if ((data[i][j] === null) || (data[i+1][j] === null) || (data[i+2][j] === null))
-                    continue;
-
-                if ((Math.abs(data[i][j] - data[i+2][j]) < (0.05 * MAX_DIST)) &&
-                    (Math.abs(data[i][j] - data[i+1][j]) > (0.05 * MAX_DIST)))
-                    data[i+1][j] = (data[i][j] + data[i+2][j]) / 2.0;
-            }
-        }
+        data = signal.zeroToMax(data, MAX_DIST);
     }
 
     // boxcar smoothing
     if (isChecked('boxcar')) {
         var BOXCAR_WIDTH = document.getElementById('boxcarWidth').options[document.getElementById('boxcarWidth').selectedIndex].value;
-        data = boxcarSmooth(data, BOXCAR_WIDTH, 1);
-        data = boxcarSmooth(data, BOXCAR_WIDTH, 2);
+        data = signal.boxcarSmooth(data, BOXCAR_WIDTH, 1);
+        data = signal.boxcarSmooth(data, BOXCAR_WIDTH, 2);
     }
 
-    // todo:
-    // - highlight correlated sections
 
     var canvas = document.getElementById('main');
     var ctx = canvas.getContext('2d');
@@ -198,61 +104,121 @@ function draw(data, speed) {
     }
 
     // derivatives
-    var derivative = data.reduce(function(prev, cur) { prev.push([cur[0], 0, 0]); return prev; }, []);
-    for(var sensor_i = 0; sensor_i < COLORS.length; sensor_i++) {
-        for(var i = 1; i < data.length; i++) {
-            derivative[i][sensor_i + 1] = data[i][sensor_i + 1] - data[i - 1][sensor_i + 1];
-        }
-    }
+    var derivative = signal.derivative(data);
+    var derivative2 = signal.derivative(derivative);
 
-    var derivative2 = data.reduce(function(prev, cur) { prev.push([cur[0], 0, 0]); return prev; }, []);
-    for(var sensor_i = 0; sensor_i < COLORS.length; sensor_i++) {
-        for(var i = 1; i < data.length; i++) {
-            derivative2[i][sensor_i + 1] = derivative[i][sensor_i + 1] - derivative[i - 1][sensor_i + 1];
-        }
-    }
-
-    if (isChecked('dy')) {
-        COLORS.forEach(function(sensorColor, sensor_i) {
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(' + sensorColor.join(',') + ',0.5)';
-            ctx.moveTo(0, canvas.height);
-            for(var i = 1; i < data.length; i++) {
-                ctx.lineTo(data[i][0] * PIXELS_PER_SECOND, dist2y(derivative[i][sensor_i + 1]) - 100);
-            }
-            ctx.stroke();
-        });
-    }
-
-    if (isChecked('dy2')) {
-        COLORS.forEach(function(sensorColor, sensor_i) {
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(' + sensorColor.join(',') + ',0.5)';
-            ctx.moveTo(0, canvas.height);
-            for(var i = 1; i < data.length; i++) {
-                ctx.lineTo(data[i][0] * PIXELS_PER_SECOND, dist2y(derivative2[i][sensor_i + 1]) - 100);
-            }
-            ctx.stroke();
-        });
+    if (isChecked('highpass') && (isChecked('dy') || isChecked('dy2'))) {
+        derivative = signal.highPassFilter(derivative);
+        derivative2 = signal.highPassFilter(derivative2);
     }
 
     if (isChecked('dy') || isChecked('dy2')) {
-        ctx.beginPath();
-        ctx.strokeStyle = 'yellow';
-        ctx.moveTo(0, canvas.height - 100);
-        ctx.lineTo(canvas.width, canvas.height - 100);
-        ctx.stroke();
+        var dCanvas = document.getElementById('dCanvas');
+        if (!dCanvas) {
+            var dCanvas = document.createElement('canvas');
+            dCanvas.id = 'dCanvas';
+            dCanvas.width = Math.abs(data[data.length - 1][0] - data[0][0]) * PIXELS_PER_SECOND;
+            dCanvas.height = 400;
+            document.getElementById('container').appendChild(dCanvas);
+        }
+
+        var derivativeToUse = isChecked('dy') ? derivative : derivative2;
+
+        var maxDerivValue = derivativeToUse.reduce(function(prev, cur) { return Math.max(Math.abs(cur[2]), Math.max(Math.abs(cur[1]), prev)); }, 0);
+        var maxDerivValue = 40;
+
+        var dctx = dCanvas.getContext('2d');
+        dctx.lineWidth = 3;
+        dctx.lineCap = 'round';
+        dctx.fillStyle = 'black';
+        dctx.fillRect(0, 0, dCanvas.width, dCanvas.height);
+        COLORS.forEach(function(sensorColor, sensor_i) {
+            dctx.beginPath();
+            dctx.strokeStyle = 'rgba(' + sensorColor.join(',') + ',1)';
+            dctx.moveTo(0, dCanvas.height / 2);
+            for(var i = 1; i < data.length; i++) {
+                dctx.lineTo(data[i][0] * PIXELS_PER_SECOND, ((derivativeToUse[i][sensor_i + 1] / maxDerivValue) + 1) * dCanvas.height * 0.5);
+            }
+            dctx.stroke();
+        });
+        dctx.strokeStyle = 'rgba(255, 255, 0, 0.5)';
+        dctx.beginPath();
+        dctx.moveTo(0, dCanvas.height / 2);
+        dctx.lineTo(dCanvas.width, dCanvas.height / 2);
+        dctx.stroke();
+    }
+    else {
+        var dCanvas = document.getElementById('dCanvas');
+        if (dCanvas) dCanvas.parentNode.removeChild(dCanvas);
     }
 
-    // draw passing distance
+    // plot peaks
+    var peaks = [[], []];
+    if (isChecked('peaks')) {
+        var dctx = null;
+        var dCanvas = document.getElementById('dCanvas');
+        if (dCanvas) dctx = dCanvas.getContext('2d');
+
+        ctx.lineWidth = 1;
+        var derivativeToUse = derivative;
+        for(var i = 0; i < derivativeToUse.length - 1; i++) {
+            for(var sensor_i = 1; sensor_i <= 2; sensor_i++) {
+                if ((derivativeToUse[i][sensor_i] < 0) && (derivativeToUse[i + 1][sensor_i] >= 0)) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = 'rgba(' + COLORS[sensor_i - 1].join(',') + ',0.5)';
+                    ctx.moveTo(derivativeToUse[i][0] * PIXELS_PER_SECOND, 0);
+                    ctx.lineTo(derivativeToUse[i][0] * PIXELS_PER_SECOND, canvas.height);
+                    ctx.stroke();
+
+                    peaks[sensor_i - 1].push(i);
+
+                    if (dctx && dCanvas) {
+                        dctx.beginPath();
+                        dctx.lineWidth = 1;
+                        dctx.strokeStyle = 'rgba(' + COLORS[sensor_i - 1].join(',') + ',0.5)';
+                        dctx.moveTo(derivativeToUse[i][0] * PIXELS_PER_SECOND, 0);
+                        dctx.lineTo(derivativeToUse[i][0] * PIXELS_PER_SECOND, dCanvas.height);
+                        dctx.stroke();
+                    }
+                }
+            }
+        }
+        ctx.lineWidth = 3;
+    }
+
+    if (isChecked('correlate')) {
+        var correlated = [[], []];
+        for(var i = 0; i < peaks[0].length; i++) {
+            var thisPeak = peaks[0][i];
+
+            var before = peaks[1].filter(function(p) { return p <= thisPeak; }).pop();
+            var after = peaks[1].filter(function(p) { return p >= thisPeak; })[0];
+
+            if (before !== undefined && after !== undefined) {
+                var correlatedPeak = (data[thisPeak][0] - data[before][0]) <= (data[after][0] - data[thisPeak][0]) ? before : after;
+
+                var timespan = Math.abs(data[correlatedPeak][0] - data[thisPeak][0]);
+                if (timespan < 2.0) {
+                    if (!isChecked('onepointfive') || ((data[thisPeak][1] < 150) && (data[correlatedPeak][2] < 150)))
+                    if (Math.abs(data[thisPeak][1] - data[correlatedPeak][2]) < 10) {
+                        ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
+                        ctx.fillRect(data[thisPeak][0] * PIXELS_PER_SECOND, 0, timespan * PIXELS_PER_SECOND, canvas.height);
+                    }
+                }
+            }
+        }
+    }
+
+    // draw legal passing distance
     ctx.beginPath();
     ctx.strokeStyle = 'red';
     ctx.setLineDash([5, 15]);
     ctx.moveTo(0, dist2y(91.44));
     ctx.lineTo(canvas.width, dist2y(91.44));
     ctx.stroke();
-    ctx.setLineDash([10, 1]);
+    ctx.setLineDash([]);
 
+    // draw data
     COLORS.forEach(function(sensorColor, sensor_i) {
         ctx.strokeStyle = ctx.fillStyle = 'rgba(' + sensorColor.join(',') + ',1.0)';
 
