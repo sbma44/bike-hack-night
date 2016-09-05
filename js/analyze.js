@@ -68,6 +68,9 @@ function draw(data, speed) {
         return d;
     });
 
+    var originalData = JSON.parse(JSON.stringify(data));
+
+
     // change zero => max
     if (isChecked('zero')) {
         data = signal.zeroToMax(data, MAX_DIST);
@@ -83,6 +86,7 @@ function draw(data, speed) {
 
     var canvas = document.getElementById('main');
     var ctx = canvas.getContext('2d');
+    ctx.font = "12px helvetica";
     ctx.lineCap = 'round';
     ctx.lineWidth = 3;
 
@@ -130,27 +134,30 @@ function draw(data, speed) {
                 unmatchedA = correlated[1];
                 unmatchedB = correlated[2];
 
+                var realData = signal.associateRealDataWithCorrelatedPairs(correlatedPairs, originalData);
+
                 unmatchedA.forEach(function(pt) {
                     drawCircle(pt[0], pt[1], 'rgba(' + COLORS[0].join(',') + ',1.0)');
                 });
                 unmatchedB.forEach(function(pt) {
                     drawCircle(pt[0], pt[1], 'rgba(' + COLORS[1].join(',') + ',1.0)');
                 });
-                correlatedPairs.forEach(function(pair) {
+                correlatedPairs.forEach(function(pair, i) {
                     pair.forEach(function(pt) {
                         drawCircle(pt[0], pt[1], 'rgba(50, 255, 50, 1)');
                     });
 
                     var avgX = PIXELS_PER_SECOND * (pair[0][0] + pair[1][0]) * 0.5;
-                    var avgY = (pair[0][1] + pair[1][1]) * 0.5;
-                    // @TODO: fetch original data
-                    //var avgY = dist2y((data[pair[0][0]][1] + data[pair[1][0]][2]) * 0.5);
+                    var avgY = dist2y(realData[i]);
 
                     ctx.strokeStyle = 'yellow';
                     ctx.beginPath();
-                    ctx.moveTo(avgX - 25, dist2y(avgY));
-                    ctx.lineTo(avgX + 25, dist2y(avgY));
+                    ctx.moveTo(avgX - 25, avgY);
+                    ctx.lineTo(avgX + 25, avgY);
                     ctx.stroke();
+
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillText((realData[i] * 0.0328084).toFixed(2) + ' ft', avgX + 30, avgY + 5);
                 });
             }
             else {
