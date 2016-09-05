@@ -40,8 +40,6 @@ function setup(distanceData, geoData) {
     var data = JSON.parse(distanceData);
     var geo = JSON.parse(geoData);
 
-    var speed = signal.calculateSpeed(geo);
-
     MAX_DIST = data.reduce(function(prev, cur) { return Math.max(prev, Math.max(cur[1], cur[2])); }, 0);
 
     var canvas = document.createElement('canvas');
@@ -52,13 +50,24 @@ function setup(distanceData, geoData) {
 
     Array.prototype.slice.call(document.getElementsByTagName('input'), 0).concat(Array.prototype.slice.call(document.getElementsByTagName('select'), 0))
         .forEach(function(el) {
-            addEvent(el, 'change', draw.bind(null, data, speed));
+            addEvent(el, 'change', draw.bind(null, data, geo));
         });
 
-    draw(data, speed);
+    draw(data, geo);
 }
 
-function draw(data, speed) {
+function draw(data, geo) {
+
+    // make copies
+    data = JSON.parse(JSON.stringify(data));
+    geo = JSON.parse(JSON.stringify(geo));
+
+    // trim start and end, if desired
+    if (isChecked('trim')) {
+        var r = signal.trimTrip(data, geo);
+        data = r[0];
+        geo = r[1];
+    }
 
     // set initial t = 0
     var base = data[0][0];
@@ -68,8 +77,17 @@ function draw(data, speed) {
         return d;
     });
 
+    var speed = signal.calculateSpeed(geo);
+
+    // keep the data around
     var originalData = JSON.parse(JSON.stringify(data));
 
+    // basic canvas setup
+    var canvas = document.getElementById('main');
+    var ctx = canvas.getContext('2d');
+    ctx.font = "12px helvetica";
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 3;
 
     // change zero => max
     if (isChecked('zero')) {
@@ -83,20 +101,14 @@ function draw(data, speed) {
         data = signal.boxcarSmooth(data, BOXCAR_WIDTH, 2);
     }
 
-
-    var canvas = document.getElementById('main');
-    var ctx = canvas.getContext('2d');
-    ctx.font = "12px helvetica";
-    ctx.lineCap = 'round';
-    ctx.lineWidth = 3;
-
+    // blank canvas
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // draw speed
     if (isChecked('speed')) {
         var maxSpeed = 40; //speed.reduce(function(prev, cur) { return Math.max(prev, cur[1]) }, 0);
-        ctx.fillStyle = '#222';
+        ctx.fillStyle = '#444';
         ctx.beginPath();
         ctx.moveTo(0, canvas.height - (canvas.height * speed[0][1] / maxSpeed));
         speed.forEach(function(s) {
@@ -109,7 +121,6 @@ function draw(data, speed) {
     }
 
     if (isChecked('peaks')) {
-
         var q = queue();
         q.defer(signal.peaks, data, 1, MAX_DIST);
         q.defer(signal.peaks, data, 2, MAX_DIST);
@@ -180,7 +191,7 @@ function draw(data, speed) {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // draw data
+    // draw data - accounts for gappy data, which no longer exists
     COLORS.forEach(function(sensorColor, sensor_i) {
         ctx.strokeStyle = ctx.fillStyle = 'rgba(' + sensorColor.join(',') + ',1.0)';
 
