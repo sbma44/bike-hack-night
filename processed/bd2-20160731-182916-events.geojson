@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 161.5,
+        "timestamp": 1470004317.498943,
+        "speed": 6.0488543891395725,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0120750972459,
+          38.91261335310995
+        ]
+      }
+    }
+  ]
+}

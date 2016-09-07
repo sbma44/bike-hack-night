@@ -1,0 +1,433 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 56,
+        "timestamp": 1471529040.354123,
+        "speed": 15.103833124083005,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01254915131278,
+          38.91261950884585
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 61.5,
+        "timestamp": 1471529042.4276233,
+        "speed": 9.443081119759478,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01279236884812,
+          38.91261633347868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 52,
+        "timestamp": 1471529044.349123,
+        "speed": 7.966298313812331,
+        "overtaken": false,
+        "overtook": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01285497636258,
+          38.91261562029127
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 162,
+        "timestamp": 1471529057.7881231,
+        "speed": 14.409391428094885,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0136071603967,
+          38.91262668773428
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 104.5,
+        "timestamp": 1471529069.904123,
+        "speed": 3.585358623380932,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01426148625615,
+          38.91261247792682
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 106.5,
+        "timestamp": 1471529087.038623,
+        "speed": 18.108906523374372,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01516948722784,
+          38.91259791430231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 9.5,
+        "timestamp": 1471529090.8801231,
+        "speed": 11.559733225776597,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01563559048672,
+          38.91259511225597
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 102,
+        "timestamp": 1471529105.289123,
+        "speed": 11.716449552169166,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01658022041242,
+          38.912591364708014
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 101,
+        "timestamp": 1471529110.299123,
+        "speed": 14.912227181171058,
+        "overtaken": false,
+        "overtook": true,
+        "marker-color": "#00aa00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01688082706823,
+          38.91259055534174
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 122.5,
+        "timestamp": 1471529113.7316232,
+        "speed": 12.95029231606306,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01719321873918,
+          38.91259260463508
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 179,
+        "timestamp": 1471529117.987123,
+        "speed": 2.4167905993437597,
+        "overtaken": false,
+        "overtook": true,
+        "marker-color": "#00aa00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0173409541104,
+          38.91259357593355
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 107,
+        "timestamp": 1471529143.191123,
+        "speed": 18.614016824729635,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01821043773501,
+          38.912607283688146
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 72.5,
+        "timestamp": 1471529155.9021232,
+        "speed": 18.77245536880233,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01906845301991,
+          38.9126084512585
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 119,
+        "timestamp": 1471529163.726623,
+        "speed": 12.708228636900014,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01966949582587,
+          38.91260909356379
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 87.5,
+        "timestamp": 1471529191.762123,
+        "speed": 3.3060730441072548,
+        "overtaken": false,
+        "overtook": true,
+        "marker-color": "#00aa00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02067903975754,
+          38.91258910768994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 83,
+        "timestamp": 1471529216.002123,
+        "speed": 0.006950718737397698,
+        "overtaken": false,
+        "overtook": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0208422933491,
+          38.9125735452761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 104,
+        "timestamp": 1471529231.6256232,
+        "speed": 13.271687943466066,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02128364116855,
+          38.912594684753564
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 65,
+        "timestamp": 1471529265.8401232,
+        "speed": 0.000006735114769141553,
+        "overtaken": false,
+        "overtook": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02187938622853,
+          38.9126115991165
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 134.5,
+        "timestamp": 1471529320.441123,
+        "speed": 15.128303794034313,
+        "overtaken": false,
+        "overtook": true,
+        "marker-color": "#00aa00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02579783858204,
+          38.91261759607623
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 190.5,
+        "timestamp": 1471529359.299123,
+        "speed": 5.761185390510656,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02770790821002,
+          38.91261880632854
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 106,
+        "timestamp": 1471529375.220123,
+        "speed": 8.532017155466303,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02857708688963,
+          38.912623765463984
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 120,
+        "timestamp": 1471529377.236123,
+        "speed": 12.664075608958232,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02863520574147,
+          38.912623943888626
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 82,
+        "timestamp": 1471529379.877123,
+        "speed": 13.477678286206423,
+        "overtaken": false,
+        "overtook": false
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.02887289507456,
+          38.91262320134273
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "distance": 136,
+        "timestamp": 1471529384.104623,
+        "speed": 12.890756426626412,
+        "overtaken": true,
+        "overtook": false,
+        "marker-color": "#aa0000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.0291416672797,
+          38.91262234293228
+        ]
+      }
+    }
+  ]
+}

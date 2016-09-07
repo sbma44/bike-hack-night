@@ -77,7 +77,13 @@ function draw(data, geo) {
         return d;
     });
 
+    // calculate speed
     var speed = signal.calculateSpeed(geo);
+    // make speed timestamps relative to t = 0
+    speed = speed.map(function(s) {
+        s[0] = s[0] - geo.features[0].properties.timestamp[0];
+        return s;
+    });
 
     // keep the data around
     var originalData = JSON.parse(JSON.stringify(data));

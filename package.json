@@ -14,6 +14,7 @@
   "dependencies": {
     "d3-queue": "^3.0.3",
     "slayer": "git@github.com:sbma44/slayer.git#browserifiable",
+    "turf": "^3.0.14",
     "turf-distance": "^3.0.12",
     "turf-point": "^2.0.1",
     "ws": "^1.1.1"
