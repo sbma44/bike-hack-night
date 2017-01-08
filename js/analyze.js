@@ -88,6 +88,11 @@ function draw(data, geo) {
     // keep the data around
     var originalData = JSON.parse(JSON.stringify(data));
 
+    // calculate sampling rate
+    var sonarHz = originalData.length / (originalData[originalData.length - 1][0] - originalData[0][0]);
+    var geoHz = geo.features[0].properties.timestamp.length / (geo.features[0].properties.timestamp[geo.features[0].properties.timestamp.length - 1] - geo.features[0].properties.timestamp[0]);
+    document.getElementById('hz').innerText = sonarHz.toFixed(1) + ' Hz (sonar) / ' + geoHz.toFixed(1) + ' Hz (geo)';
+
     // basic canvas setup
     var canvas = document.getElementById('main');
     var ctx = canvas.getContext('2d');
