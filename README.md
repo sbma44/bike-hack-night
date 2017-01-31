@@ -1,9 +1,11 @@
 # bike hack night presentation
 
-Hello! This is the slide deck for a talk I gave at [Bike Hack Night VI](https://www.meetup.com/Transportation-Techies/events/231755172/). It has a few related repos:
+Hello! This is the slide deck for a talk I gave at [Bike Hack Night VI](https://www.meetup.com/Transportation-Techies/events/231755172/). You can watch the slides and listen to recorded audio of my talk by visiting [this link](sbma44.s3-website-us-east-1.amazonaws.com/bike-hack-night/index.html).
+
+It has a few related repos:
 
 - [bikedatacollector-ios](https://github.com/sbma44/bikedatacollector-ios)
-- [bikedatacollctor-python](https://github.com/sbma44/bikedatacollector-python)
+- [bikedatacollector-python](https://github.com/sbma44/bikedatacollector-python)
 - [bikedatacollector-arduino](https://github.com/sbma44/bikedatacollector-arduino)
 
 It's worth noting that much of the signal analysis for this project wound up in _this_ repo, thanks to the flexibility of HTML5 for exploratory work and the excellent turf.js library. The Python doesn't do much except grab data from Firebase.
