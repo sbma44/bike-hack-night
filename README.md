@@ -1,6 +1,6 @@
 # bike hack night presentation
 
-Hello! This is the slide deck for a talk I gave at [Bike Hack Night VI](https://www.meetup.com/Transportation-Techies/events/231755172/). You can watch the slides and listen to recorded audio of my talk by visiting [this link](https://sbma44.s3-website-us-east-1.amazonaws.com/bike-hack-night/index.html).
+Hello! This is the slide deck for a talk I gave at [Bike Hack Night VI](https://www.meetup.com/Transportation-Techies/events/231755172/). You can watch the slides and listen to recorded audio of my talk by visiting [this link](http://sbma44.s3-website-us-east-1.amazonaws.com/bike-hack-night/index.html).
 
 It has a few related repos:
 
